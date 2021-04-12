@@ -84,36 +84,13 @@ pipeline {
               echo ###
               deploy propfile['war_deploy_dir']/propfile['war_file'] --name=propfile['war_file'] --runtime-name=propfile['war_file'] --headers={rollout propfile['server_groups'](rolling-to-servers=true)} --force
               end-if
-              echo
-              echo ###
-              echo ### Restarting servers
-              echo ###
-              echo
-              echo ### Restarting somslite-server01
-              if (outcome != success) of /host=node1/server-config=somslite-server01:restart
-              echo ### Server somslite-server01 restart failed
-              echo
-              else
-              echo ### Server somslite-server01 restarted
-              echo
-              end-if
               EOF
 	     
-              echo 'coping property file into server'
-		mkdir -p $WORKSPACE/artifacts
-		cp -R /C/windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/DevOps_SomsLite/DevOps_SomsLite_release-2021_3.2/artifacts/* $WORKSPACE/artifacts/
-		cd $WORKSPACE/artifacts/properties/
-		mv dev_app_1_config-mule.properties config-mule.properties
-		mv dev_app_1_log4j.properties log4j.properties
-		mv dev_app_1_config.properties config.properties
-		scp -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no -rp $WORKSPACE/artifacts/propfile['war_file'] $target_user@997725-DEV-EPIC-APP-01.signetomni.com:propfile['war_deploy_dir']
-		scp -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no -rp $WORKSPACE/artifacts/properties/config-mule.properties $target_user@997725-DEV-EPIC-APP-01.signetomni.com:propfile['property1_deploy_dir']
-		scp -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no -rp $WORKSPACE/artifacts/properties/log4j.properties $target_user@997725-DEV-EPIC-APP-01.signetomni.com:propfile['property1_deploy_dir']
-		scp -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no -rp $WORKSPACE/artifacts/properties/config.properties $target_user@997725-DEV-EPIC-APP-01.signetomni.com:propfile['property2_deploy_dir']
-		scp -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no -rp $WORKSPACE/propfile['deployment_cli_file'] propfile['target_user']@997725-DEV-EPIC-APP-01.signetomni.com:propfile['war_deploy_dir']
-		echo' deploying'
-		ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no propfile['target_user']@997725-DEV-EPIC-APP-01.signetomni.com "propfile['cli_script'] --connect --controller=997725-DEV-EPIC-APP-01.signetomni.com:propfile['target_port'] --timeout=20000 --file=propfile['war_deploy_dir']/propfile['deployment_cli_file'] --user=propfile['jbosscli_offline_user'] --password='98&OpUw2ZgBTE*R2'"
-			}
+	     
+             ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no propfile['target_user']@997725-DEV-EPIC-APP-01.signetomni.com  cp GiftCardMessagingEAR-?.?.?-SNAPSHOT.ear $propfile['war_file']
+	     ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no propfile['target_user']@997725-DEV-EPIC-APP-01.signetomni.com "propfile['cli_script'] --connect --controller=997725-DEV-EPIC-APP-01.signetomni.com:propfile['target_port'] --timeout=20000 --file=propfile['war_deploy_dir']/propfile['deployment_cli_file'] --user=propfile['jbosscli_offline_user'] --password='98&OpUw2ZgBTE*R2'"
+		
+		}
 		}
 	}
    }
