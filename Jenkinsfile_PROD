@@ -25,32 +25,15 @@ pipeline {
 			steps {
 				container('gradle') {
 					script {
-						withMaven(maven: 'MAVEN-3.6.3') {
-                echo 'Building'
-		propfile = readProperties(file: './project.properties_PROD')
-		echo  propfile['war_file']				
-                cd SomsLite
-                gradle --no-daemon somslitebuild
-                pwd
-                cd ..
-                echo 'copy property file'
-                cp -r SterlingESBAux/properties/dev1 properties/
-                cp -r SterlingESBAux/properties/uat1 properties/
-                cp -r SterlingESBAux/properties/perf1 properties/
-                cp -r SterlingESBAux/properties/perf2 properties/
-                cp -r SterlingESBAux/properties/prod1 properties/
-                cp -r SterlingESBAux/properties/prod2 properties/
-
-                ls -la properties
-                rm -rf $WORKSPACE/artifacts
-                mkdir -p $WORKSPACE/artifacts
-                for i in SomsLite;do cp -rp ${i}/dist/libs/* $WORKSPACE/artifacts/ ;done
+					withMaven(maven: 'MAVEN-3.6.3') {
+		echo 'Hello GiftCardEjb '
+		mvn clean install
+		rm -rf $WORKSPACE/artifacts
+		mkdir -p $WORKSPACE/artifacts
+		for i in GiftCardMessagingEAR;do cp -rp ${i}/target/* $WORKSPACE/artifacts/ ;done
                 cd $WORKSPACE/artifacts/
                 ls -lrt
-                cd ..
-                cp -rp properties $WORKSPACE/artifacts/
-                cd artifacts
-                ls -lrt
+                
 		//adding Jacoco and javadoc steps
 		if (propfile['javadoc'] == "true") {
 								sh 'mvn javadoc:aggregate'
