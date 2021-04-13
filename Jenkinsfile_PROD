@@ -89,12 +89,12 @@ pipeline {
 	     //Create war deploy dir
 	     mkdir -p propfile[war_deploy_dir] 
 	     //Rename EAR file
-             ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no propfile['target_user']@997725-DEV-EPIC-APP-01.signetomni.com  cp GiftCardMessagingEAR-?.?.?-SNAPSHOT.ear $propfile['war_file']
+             ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no ${USERNAME}@${HOSTNAME} cp GiftCardMessagingEAR-?.?.?-SNAPSHOT.ear $propfile['war_file']
 	     //Copy deployment.cli to node 1
 	     
-	     ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no -rp propfile['deployment_cli_file'] propfile['target_user']@997725-DEV-EPIC-APP-01.signetomni.com:propfile[war_deploy_dir] 
+	     ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no -rp propfile['deployment_cli_file'] ${USERNAME}@${HOSTNAME}:propfile[war_deploy_dir] 
 	     
-	     ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no propfile['target_user']@997725-DEV-EPIC-APP-01.signetomni.com "propfile['cli_script'] --connect --controller=997725-DEV-EPIC-APP-01.signetomni.com:propfile['target_port'] --timeout=20000 --file=propfile['war_deploy_dir']/propfile['deployment_cli_file'] --user=propfile['jbosscli_offline_user'] --password='98&OpUw2ZgBTE*R2'"
+	     ssh -i /c/Users/ernesto.alvarez/.ssh/id_rsa_jenkins -o StrictHostKeyChecking=no ${USERNAME}@${HOSTNAME}"propfile['cli_script'] --connect --controller=997725-DEV-EPIC-APP-01.signetomni.com:propfile['target_port'] --timeout=20000 --file=propfile['war_deploy_dir']/propfile['deployment_cli_file'] --user=propfile['jbosscli_offline_user'] --password='98&OpUw2ZgBTE*R2'"
 		
 		}
 		}
